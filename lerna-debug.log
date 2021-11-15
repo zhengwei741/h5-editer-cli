@@ -1,0 +1,15 @@
+0 silly argv {
+0 silly argv   _: [ 'init' ],
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': 'C:\\Users\\zw\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath E:\workspace\github\iop-cli
+3 verbose init skipping validations
+4 verbose init skipping preparations
+5 info Initializing Git repository
+6 error Error: Command failed with exit code 1: git init
+6 error 'git' �����ڲ����ⲿ���Ҳ���ǿ����еĳ���
+6 error ���������ļ���
+6 error     at makeError (C:\Users\zw\AppData\Roaming\npm\node_modules\lerna\node_modules\execa\lib\error.js:60:11)
+6 error     at handlePromise (C:\Users\zw\AppData\Roaming\npm\node_modules\lerna\node_modules\execa\index.js:118:26)
