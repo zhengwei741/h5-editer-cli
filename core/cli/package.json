@@ -1,0 +1,45 @@
+{
+  "name": "@iop-cli/core",
+  "version": "1.0.2",
+  "description": "iop-cli core",
+  "author": "1217967340@qq.com <1217967340@qq.com>",
+  "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/packages/core#readme",
+  "license": "ISC",
+  "main": "bin/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "bin": {
+    "iopcli": "bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhengwei741/iop-cli.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/zhengwei741/iop-cli/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+  },
+  "dependencies": {
+    "@iop-cli/log": "file:../../utils/log",
+    "@iop-cli/get-npm-info": "file:../../utils/get-npm-info",
+    "import-local": "^3.0.3",
+    "colors": "^1.4.0",
+    "root-check": "^1.0.0",
+    "semver": "^7.3.5",
+    "path-exists": "^4.0.0",
+    "minimist": "^1.2.5",
+    "dotenv": "^10.0.0"
+  }
+}

@@ -1,11 +1,11 @@
 {
-  "name": "@iop-cli/core",
+  "name": "@iop-cli/get-npm-info",
   "version": "1.0.2",
-  "description": "iop-cli core",
+  "description": "> TODO: description",
   "author": "1217967340@qq.com <1217967340@qq.com>",
-  "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/packages/core#readme",
+  "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/core/get-npm-info#readme",
   "license": "ISC",
-  "main": "bin/index.js",
+  "main": "lib/index.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -13,8 +13,8 @@
   "files": [
     "lib"
   ],
-  "bin": {
-    "iopcli": "bin/index.js"
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -26,11 +26,8 @@
   "bugs": {
     "url": "https://github.com/zhengwei741/iop-cli/issues"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "devDependencies": {
-    "@iop-cli/log": "file:../utils/log",
-    "import-local": "^3.0.3"
+  "dependencies": {
+    "axios": "^0.24.0",
+    "url-join": "^4.0.1"
   }
 }
