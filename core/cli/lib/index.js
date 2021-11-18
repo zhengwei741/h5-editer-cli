@@ -5,12 +5,14 @@ const semver = require('semver')
 const colors = require('colors')
 const pathExists = require('path-exists')
 const dotenv = require('dotenv')
+const commander = require('commander')
 
 const pkg = require('../package.json')
 const { LOW_NODE_VERSION } = require('./const')
 
 const log = require('@iop-cli/log')
 const { getLastVersion } = require('@iop-cli/get-npm-info')
+
 
 async function core () {
   try {
@@ -21,6 +23,58 @@ async function core () {
     checkInputArgs()
     // checkEnv()
     await updateGlobalVersion()
+
+    // const { program } = commander
+    // program.version(pkg.version)
+
+    // program
+    //   .option('-d, --debug', 'output extra debugging')
+    //   .option('-s, --small', 'small pizza size')
+    //   .option('-p, --pizza-type <type>', 'flavour of pizza');
+
+    // program
+    //   .option('-c, --cheese <type> [color...]', 'add the specified type of cheese', 'blue');
+
+    // program
+    //   .command('clone <source> [destination]')
+    //   .description('clone a repository into a newly created directory')
+    //   .action((source, destination) => {
+    //     console.log('clone command called');
+    //     console.log(arguments)
+    //   });
+
+    // program
+    //   .command('serve')
+    //   .description('launch web server')
+    //   .option('--p, --port <port_number>', 'web port')
+    //   .action((options) => {
+    //     console.log(`server on port ${options.port}`);
+    //   });
+
+    // program
+    //   .command('st')
+    //   .description('查收查出是')
+    //   .command('op')
+    //   .description('啊十大建设的')
+    //   .action((options) => {
+    //     console.log(`123`);
+    //   });
+
+    // program.name('iopcli').usage('[global options] command')
+
+    // program.addHelpCommand('assist [command]', 'show assistance');
+
+    // // 监听未知的命令
+    // program.on('command:*', function (obj) {
+    //   // process.env.VERBOSE = this.opts().verbose;
+    //   console.log(obj)
+    //   console.log(program.commands.map(cmd => cmd._name), '全部的命令')
+    // });
+
+    // program.parse(process.argv)
+
+    // // console.log(program.opts(), '----------------')
+
   } catch (e) {
     log.error(e.message)
   }

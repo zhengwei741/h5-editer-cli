@@ -23,10 +23,15 @@ function getNpmInfo (npmName, registry) {
 
 async function getLastVersion (npmName, registry) {
   const data = await getNpmInfo(npmName, registry)
+
+  if (!data) return null
+
   const distTags = data['dist-tags']
+
   if (distTags) {
     return distTags.latest
   }
+
   return null
 }
 
