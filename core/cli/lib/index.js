@@ -20,61 +20,10 @@ async function core () {
     checkNodeVersion()
     checkRoot()
     checkUserHome()
-    checkInputArgs()
     // checkEnv()
     await updateGlobalVersion()
 
-    // const { program } = commander
-    // program.version(pkg.version)
-
-    // program
-    //   .option('-d, --debug', 'output extra debugging')
-    //   .option('-s, --small', 'small pizza size')
-    //   .option('-p, --pizza-type <type>', 'flavour of pizza');
-
-    // program
-    //   .option('-c, --cheese <type> [color...]', 'add the specified type of cheese', 'blue');
-
-    // program
-    //   .command('clone <source> [destination]')
-    //   .description('clone a repository into a newly created directory')
-    //   .action((source, destination) => {
-    //     console.log('clone command called');
-    //     console.log(arguments)
-    //   });
-
-    // program
-    //   .command('serve')
-    //   .description('launch web server')
-    //   .option('--p, --port <port_number>', 'web port')
-    //   .action((options) => {
-    //     console.log(`server on port ${options.port}`);
-    //   });
-
-    // program
-    //   .command('st')
-    //   .description('查收查出是')
-    //   .command('op')
-    //   .description('啊十大建设的')
-    //   .action((options) => {
-    //     console.log(`123`);
-    //   });
-
-    // program.name('iopcli').usage('[global options] command')
-
-    // program.addHelpCommand('assist [command]', 'show assistance');
-
-    // // 监听未知的命令
-    // program.on('command:*', function (obj) {
-    //   // process.env.VERBOSE = this.opts().verbose;
-    //   console.log(obj)
-    //   console.log(program.commands.map(cmd => cmd._name), '全部的命令')
-    // });
-
-    // program.parse(process.argv)
-
-    // // console.log(program.opts(), '----------------')
-
+    registerCommand()
   } catch (e) {
     log.error(e.message)
   }
@@ -112,17 +61,6 @@ function checkUserHome () {
   }
 }
 /**
- * 是否开启debug模式
- */
-function checkInputArgs () {
-  // minimist 参数转换
-  const parseArgs = require('minimist')
-  const args = parseArgs(process.argv.slice(2))
-  process.env.LOG_LEVEL = args.debug ? 'verbose' : 'info'
-  log.level = process.env.LOG_LEVEL
-  log.verbose('debug 模式')
-}
-/**
  * 检查环境变量
  */
 function checkEnv () {
@@ -146,6 +84,43 @@ async function updateGlobalVersion () {
   if (lastVersion && semver.lt(currentVersion, lastVersion)) {
     log.warn(colors.yellow(`请手动更新 ${npmName}，当前版本：${currentVersion}，最新版本：${lastVersion}
     更新命令： npm install -g ${npmName}`));
+  }
+}
+
+/**
+ * 注册命令
+ */
+const { program } = commander
+
+function registerCommand () {
+  program
+    .version(pkg.version)
+    .name(Object.keys(pkg.bin)[0])
+    .usage('<command> [option]')
+    .option('-d, --debug', '开启debug模式', false)
+    .option('-v, -V, --version', '查看版本')
+
+  // 开启debug
+  program.on('option:debug', function (obj) {
+    if (program.opts().debug) {
+      process.env.LOG_LEVEL = 'verbose'
+    } else {
+      process.env.LOG_LEVEL = 'info'
+    }
+    log.level = process.env.LOG_LEVEL
+    log.verbose('开启 debug 模式')
+  })
+
+  // 监听未知的命令
+  program.on('command:*', function (obj) {
+    log.warn(colors.red(`未知的命令${obj[0]}`))
+    log.info(program.commands.map(cmd => cmd.name()).join(','), '全部的命令')
+  })
+
+  program.parse(process.argv)
+
+  if (program.args && program.args.length === 0) {
+    program.outputHelp()
   }
 }
 
