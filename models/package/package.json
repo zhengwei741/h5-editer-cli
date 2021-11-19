@@ -1,6 +1,6 @@
 {
   "name": "@iop-cli/package",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "> TODO: description",
   "author": "1217967340@qq.com <1217967340@qq.com>",
   "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/core/package#readme",
@@ -24,8 +24,8 @@
     "url": "https://github.com/zhengwei741/iop-cli/issues"
   },
   "dependencies": {
-    "@iop-cli/get-npm-info": "^1.0.3",
-    "@iop-cli/log": "^1.0.3",
+    "@iop-cli/get-npm-info": "^1.0.4",
+    "@iop-cli/log": "^1.0.4",
     "npminstall": "^4.11.0",
     "path-exists": "^4.0.0",
     "pkg-dir": "^5.0.0"
