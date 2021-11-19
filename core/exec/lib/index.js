@@ -33,7 +33,7 @@ async function exec () {
     // 未指定本地路径
     // 生成缓存路径
     targetPath = path.resolve(homepath, CACHE_DIR)
-    const storeDir = `${targetPath}/node_modules`
+    const storeDir = path.resolve(targetPath, 'node_modules')
 
     log.verbose(storeDir, 'storeDir')
 

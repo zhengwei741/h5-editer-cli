@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path')
+const fs = require('fs')
 
 const pkgDir = require('pkg-dir').sync
 const npminstall = require('npminstall')
@@ -32,16 +33,16 @@ class Package {
     }
   }
 
-  get cacheFilePath () {
-    // _@iop-cli_core@1.0.1@@iop-cli
-    return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${this.packageVersion}@${this.packageName}`);
-  }
-
   async exist () {
     // 有storeDir 不是本地路径
     if (this.storeDir) {
       await this.prepare()
-      return pathExists(this.cacheFilePath)
+
+      const fileNames = fs.readdirSync(this.storeDir)
+      for (const name of fileNames) {
+        if (name.startsWith(`_${this.cacheFilePathPrefix}`)) return true
+      }
+      return false
     } else {
       return pathExists(this.packagePath)
     }
