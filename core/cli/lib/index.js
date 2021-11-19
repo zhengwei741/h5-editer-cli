@@ -112,7 +112,7 @@ function registerCommand () {
     .usage('<command> [option]')
     .option('-d, --debug', '开启debug模式', false)
     .option('-v, -V, --version', '查看版本')
-    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '');
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '')
 
   // 开启debug
   program.on('option:debug', function (obj) {
