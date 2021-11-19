@@ -9,7 +9,7 @@ const SETTINGS = {
   // 默认init包
   // 可通过后台获取 定制不同的初始化方法
   // init: '@iop-cli/init',
-  init: '@iop-cli/core',
+  init: '@imooc-cli-dev',
 }
 
 const CACHE_DIR = 'dependencies'
@@ -43,13 +43,9 @@ async function exec () {
       packageName,
       packageVersion
     })
-    // 如果已经安装过先更新 否则先安装
-    if (await pkg.exist()) {
-      log.verbose(`更新: ${packageName}`)
-      pkg.update()
-    } else {
-      await pkg.install()
-    }
+
+    await pkg.install()
+
   } else {
     // 指定本地路径 直接去路径中读取 入口文件
     pkg = new Package({

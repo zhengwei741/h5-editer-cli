@@ -21,40 +21,44 @@ class Package {
     this.packageName = options.packageName
     // 版本
     this.packageVersion = options.packageVersion
+    if (this.packageVersion === 'latest') {
+      this.packageVersion = await getLastVersion(this.packageName)
+    }
     // 缓存路径
     this.storeDir = options.storeDir
     // package的缓存目录前缀
     this.cacheFilePathPrefix = this.packageName.replace('/', '_');
   }
 
-  async prepare () {
-    if (this.packageVersion === 'latest') {
-      this.packageVersion = await getLastVersion(this.packageName)
-    }
+  getFilePath (version) {
+    // _@iop-cli_core@1.0.1@@iop-cli
+    return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${version}@${this.packageName}`);
   }
 
-  async exist () {
-    // 有storeDir 不是本地路径
-    if (this.storeDir) {
-      await this.prepare()
-
-      const fileNames = fs.readdirSync(this.storeDir)
-      for (const name of fileNames) {
-        if (name.startsWith(`_${this.cacheFilePathPrefix}`)) return true
-      }
-      return false
-    } else {
-      return pathExists(this.packagePath)
+  async update () {
+    // 最新版本
+    const lastVersion = await getLastVersion(this.packageName)
+    // 缓存路径
+    const cacheFilePath = this.getFilePath(this.packageVersion)
+    // 缓存路径不等于最新版本路径 就删除 并下载最新的版本
+    if (this.getFilePath(lastVersion) !== cacheFilePath) {
+      await this.installNPM(lastVersion)
+      // 删除原本缓存文件
+      fs.rmdirSync(cacheFilePath)
+      this.packageVersion = lastVersion
     }
-  }
-
-  update () {
-
   }
 
   async install () {
-    await this.prepare()
+    const cacheFilePath = this.getFilePath(this.packageVersion)
+    if (pathExists(cacheFilePath)) {
+      return this.update()
+    } else {
+      return this.installNPM(this.packageVersion)
+    }
+  }
 
+  installNPM (version) {
     return npminstall({
       root: this.packagePath,
       registry: getDefaultRegistry(),
@@ -62,7 +66,7 @@ class Package {
       pkgs: [
         {
           name: this.packageName,
-          version: this.packageVersion
+          version
         },
       ],
     })
