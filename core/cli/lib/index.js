@@ -4,15 +4,14 @@ const userHome = require('os').homedir()
 const semver = require('semver')
 const colors = require('colors')
 const pathExists = require('path-exists')
-const dotenv = require('dotenv')
-const commander = require('commander')
+const { program } = require('commander')
 
 const pkg = require('../package.json')
-const { LOW_NODE_VERSION } = require('./const')
+const { LOW_NODE_VERSION, DEFAULT_CLI_HOME } = require('./const')
 
 const log = require('@iop-cli/log')
 const { getLastVersion } = require('@iop-cli/get-npm-info')
-
+const exec = require('@iop-cli/exec')
 
 async function core () {
   try {
@@ -20,12 +19,15 @@ async function core () {
     checkNodeVersion()
     checkRoot()
     checkUserHome()
-    // checkEnv()
+    checkEnv()
     await updateGlobalVersion()
 
     registerCommand()
   } catch (e) {
     log.error(e.message)
+    if (program.debug) {
+      console.log(e)
+    }
   }
 }
 /**
@@ -64,16 +66,28 @@ function checkUserHome () {
  * 检查环境变量
  */
 function checkEnv () {
-  console.log(dotenv)
-  // dotenv
-  const dotenvPath = path.resolve(userHome, '.env')
-
-  config = dotenv.config({
-    path: dotenvPath
-  })
-
-  console.log(config)
+  const dotenv = require('dotenv');
+  const dotenvPath = path.resolve(userHome, '.env');
+  if (pathExists(dotenvPath)) {
+    dotenv.config({
+      path: dotenvPath,
+    });
+  }
+  createDefaultConfig();
 }
+
+function createDefaultConfig () {
+  const cliConfig = {
+    home: userHome,
+  };
+  if (process.env.CLI_HOME) {
+    cliConfig['cliHome'] = path.join(userHome, process.env.CLI_HOME);
+  } else {
+    cliConfig['cliHome'] = path.join(userHome, DEFAULT_CLI_HOME);
+  }
+  process.env.CLI_HOME_PATH = cliConfig.cliHome;
+}
+
 /**
  * 提示更新版本
  */
@@ -90,7 +104,6 @@ async function updateGlobalVersion () {
 /**
  * 注册命令
  */
-const { program } = commander
 
 function registerCommand () {
   program
@@ -99,6 +112,7 @@ function registerCommand () {
     .usage('<command> [option]')
     .option('-d, --debug', '开启debug模式', false)
     .option('-v, -V, --version', '查看版本')
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '');
 
   // 开启debug
   program.on('option:debug', function (obj) {
@@ -115,6 +129,18 @@ function registerCommand () {
   program.on('command:*', function (obj) {
     log.warn(colors.red(`未知的命令${obj[0]}`))
     log.info(program.commands.map(cmd => cmd.name()).join(','), '全部的命令')
+  })
+
+  program
+    .command('init [projectName]')
+    .description('初始化项目')
+    .option('-f, --force', '是否强制初始化项目')
+    .action(exec)
+
+  // 监听targetPath 放在全局变量上
+  program.on('option:targetPath', function (targetPath) {
+    log.verbose(`targetPath: ${targetPath}`)
+    process.env.TARGET_PATH = targetPath
   })
 
   program.parse(process.argv)
