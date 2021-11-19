@@ -45,6 +45,7 @@ async function exec () {
     })
     // 如果已经安装过先更新 否则先安装
     if (await pkg.exist()) {
+      log.verbose(`更新: ${packageName}`)
       pkg.update()
     } else {
       await pkg.install()
