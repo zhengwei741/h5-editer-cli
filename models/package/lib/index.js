@@ -38,13 +38,8 @@ class Package {
   }
 
   async exist () {
-    // 有storeDir 不是本地路径
-    if (this.storeDir) {
-      await this.prepare()
-      return pathExists(this.cacheFilePath)
-    } else {
-      return pathExists(this.packagePath)
-    }
+    await this.prepare()
+    return pathExists(this.cacheFilePath)
   }
 
   update () {
