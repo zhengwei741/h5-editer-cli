@@ -9,7 +9,7 @@ const SETTINGS = {
   // 默认init包
   // 可通过后台获取 定制不同的初始化方法
   // init: '@iop-cli/init',
-  init: '@imooc-cli-dev',
+  init: 'pkg-dir',
 }
 
 const CACHE_DIR = 'dependencies'
@@ -26,6 +26,7 @@ async function exec () {
   const cmdName = cmd.name()
   const packageName = SETTINGS[cmdName]
   const packageVersion = 'latest'
+  // const packageVersion = '4.0.0'
 
   let pkg
 

@@ -4,7 +4,7 @@ const fs = require('fs')
 
 const pkgDir = require('pkg-dir').sync
 const npminstall = require('npminstall')
-const pathExists = require('path-exists')
+const pathExists = require('path-exists').sync
 
 const log = require('@iop-cli/log')
 const { getDefaultRegistry, getLastVersion } = require('@iop-cli/get-npm-info')
@@ -21,41 +21,88 @@ class Package {
     this.packageName = options.packageName
     // 版本
     this.packageVersion = options.packageVersion
-    if (this.packageVersion === 'latest') {
-      this.packageVersion = await getLastVersion(this.packageName)
-    }
     // 缓存路径
     this.storeDir = options.storeDir
     // package的缓存目录前缀
-    this.cacheFilePathPrefix = this.packageName.replace('/', '_');
+    this.cacheFilePathPrefix = this.packageName.replace('/', '_')
+  }
+
+  async prepare () {
+    if (this.packageVersion === 'latest') {
+      this.packageVersion = await getLastVersion(this.packageName)
+    }
   }
 
   getFilePath (version) {
     // _@iop-cli_core@1.0.1@@iop-cli
-    return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${version}@${this.packageName}`);
+    return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${version}@${this.packageName}`)
+  }
+
+  emptyDir (fileUrl) {
+    let _this = this
+    var files = fs.readdirSync(fileUrl) // 读取该文件夹
+    files.forEach(function (file) {
+      var stats = fs.statSync(fileUrl + '/' + file)
+      if (stats.isDirectory()) {
+        _this.emptyDir(fileUrl + '/' + file)
+      } else {
+        fs.unlinkSync(fileUrl + '/' + file)
+      }
+    })
+    fs.rmdirSync(fileUrl)
   }
 
   async update () {
+    const cachePaths = this.getCachePath()
     // 最新版本
     const lastVersion = await getLastVersion(this.packageName)
-    // 缓存路径
-    const cacheFilePath = this.getFilePath(this.packageVersion)
-    // 缓存路径不等于最新版本路径 就删除 并下载最新的版本
-    if (this.getFilePath(lastVersion) !== cacheFilePath) {
-      await this.installNPM(lastVersion)
-      // 删除原本缓存文件
-      fs.rmdirSync(cacheFilePath)
+
+    const lastPaths = {
+      [path.resolve(this.storeDir, this.packageName)]: true,
+      [this.getFilePath(lastVersion)]: true
+    }
+
+    let needUpdate = false
+    cachePaths.forEach(path => {
+      if (!lastPaths[path]) {
+        // 删除原本缓存文件
+        this.emptyDir(path)
+        needUpdate = true
+      }
+    })
+
+    if (needUpdate) {
       this.packageVersion = lastVersion
+      this._cachePath = lastPaths
+      return this.installNPM(lastVersion)
     }
   }
 
+  getCachePath () {
+    let cachePath = []
+    fs.readdirSync(this.storeDir).forEach(fileName => {
+      if (
+        fileName.startsWith(this.packageName) ||
+        fileName.startsWith(`_${this.cacheFilePathPrefix}`)
+      ) {
+        cachePath.push(path.resolve(this.storeDir, fileName))
+      }
+    })
+    return cachePath
+  }
+
+  exists () {
+    return pathExists(path.resolve(this.storeDir, this.packageName))
+  }
+
   async install () {
-    const cacheFilePath = this.getFilePath(this.packageVersion)
-    if (pathExists(cacheFilePath)) {
+    await this.prepare()
+
+    if (this.exists()) {
       return this.update()
-    } else {
-      return this.installNPM(this.packageVersion)
     }
+
+    return this.installNPM(this.packageVersion)
   }
 
   installNPM (version) {
