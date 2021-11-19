@@ -24,10 +24,14 @@
     "url": "https://github.com/zhengwei741/iop-cli/issues"
   },
   "dependencies": {
-    "@iop-cli/get-npm-info": "file:../../utils/get-npm-info",
-    "@iop-cli/log": "file:../../utils/log",
+    "@iop-cli/get-npm-info": "^1.0.3",
+    "@iop-cli/log": "^1.0.3",
     "npminstall": "^4.11.0",
     "path-exists": "^4.0.0",
     "pkg-dir": "^5.0.0"
+  },
+  "gitHead": "a96f4bcdc9b69a87ee09eb2a085b33ad717eabd9",
+  "publishConfig": {
+    "access": "public"
   }
 }

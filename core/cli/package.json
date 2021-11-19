@@ -30,9 +30,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@iop-cli/exec": "file:../exec",
-    "@iop-cli/get-npm-info": "file:../../utils/get-npm-info",
-    "@iop-cli/log": "file:../../utils/log",
+    "@iop-cli/exec": "^1.0.3",
+    "@iop-cli/get-npm-info": "^1.0.3",
+    "@iop-cli/log": "^1.0.3",
     "colors": "^1.4.0",
     "commander": "^8.3.0",
     "dotenv": "^10.0.0",
@@ -41,5 +41,6 @@
     "path-exists": "^4.0.0",
     "root-check": "^1.0.0",
     "semver": "^7.3.5"
-  }
+  },
+  "gitHead": "a96f4bcdc9b69a87ee09eb2a085b33ad717eabd9"
 }

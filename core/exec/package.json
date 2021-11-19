@@ -24,7 +24,11 @@
     "url": "https://github.com/zhengwei741/iop-cli/issues"
   },
   "dependencies": {
-    "@iop-cli/log": "file:../../utils/log",
-    "@iop-cli/package": "file:../../models/package"
+    "@iop-cli/log": "^1.0.3",
+    "@iop-cli/package": "^1.0.3"
+  },
+  "gitHead": "a96f4bcdc9b69a87ee09eb2a085b33ad717eabd9",
+  "publishConfig": {
+    "access": "public"
   }
 }
