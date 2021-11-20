@@ -1,6 +1,6 @@
 {
   "name": "@iop-cli/exec",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "> TODO: description",
   "author": "1217967340@qq.com <1217967340@qq.com>",
   "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/core/exec#readme",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@iop-cli/log": "^1.0.4",
-    "@iop-cli/package": "^1.0.4"
+    "@iop-cli/package": "^1.0.6"
   },
   "gitHead": "a96f4bcdc9b69a87ee09eb2a085b33ad717eabd9",
   "publishConfig": {

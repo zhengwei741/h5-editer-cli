@@ -1,6 +1,6 @@
 {
   "name": "@iop-cli/command",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "> TODO: description",
   "author": "1217967340@qq.com <1217967340@qq.com>",
   "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/core/command#readme",
@@ -27,8 +27,8 @@
     "access": "public"
   },
   "dependencies": {
-    "semver": "^7.3.5",
+    "@iop-cli/log": "file:../../utils/log",
     "colors": "^1.4.0",
-    "@iop-cli/log": "file:../../utils/log"
+    "semver": "^7.3.5"
   }
 }

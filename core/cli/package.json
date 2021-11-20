@@ -1,6 +1,6 @@
 {
   "name": "@iop-cli/core",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "iop-cli core",
   "author": "1217967340@qq.com <1217967340@qq.com>",
   "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/packages/core#readme",
@@ -30,7 +30,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@iop-cli/exec": "^1.0.4",
+    "@iop-cli/exec": "^1.0.6",
     "@iop-cli/get-npm-info": "^1.0.4",
     "@iop-cli/log": "^1.0.4",
     "colors": "^1.4.0",
