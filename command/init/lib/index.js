@@ -1,7 +1,24 @@
-'use strict';
+const Command = require('@iop-cli/command')
 
-module.exports = init;
+class InitCommand extends Command {
+  constructor(args) {
+    super(args)
+  }
 
-function init (projectName, cmdObj) {
-  console.log(projectName, cmdObj)
+  init () {
+    this.projectName = this._argv[0] || ''
+    this.fouce = this._cmd.fouce
+  }
+
+  exec () {
+
+  }
 }
+
+function init (args) {
+  return new InitCommand(args)
+}
+
+module.exports = init
+
+module.exports.InitCommand = InitCommand

@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path')
+const cp = require('child_process')
 
 const Package = require('@iop-cli/package')
 const log = require('@iop-cli/log')
@@ -8,8 +9,8 @@ const log = require('@iop-cli/log')
 const SETTINGS = {
   // 默认init包
   // 可通过后台获取 定制不同的初始化方法
-  // init: '@iop-cli/init',
-  init: 'pkg-dir',
+  init: '@iop-cli/init',
+  // init: 'pkg-dir',
 }
 
 const CACHE_DIR = 'dependencies'
@@ -60,10 +61,46 @@ async function exec () {
 
   log.verbose(rootPath, '----rootPath')
 
-  // if (rootPath) {
-  //   // 加载入口文件
-  //   require(rootPath).apply(null, arguments)
-  // }
+  if (rootPath) {
+    // 加载入口文件
+    try {
+      const args = Array.from(arguments)
+      const cmd = args[args.length - 1]
+      const o = {}
+      Object.keys(cmd).forEach(key => {
+        if (
+          cmd.hasOwnProperty(key) &&
+          !key.startsWith('_') &&
+          key !== 'parent'
+        ) {
+          o[key] = cmd[key]
+        }
+      })
+      args[args.length - 1] = o
+
+      // require(rootPath).call(null, Array.from(arguments))
+
+      let code = `require('${rootPath}').call(null, ${JSON.stringify(args)})`
+      // 这种方式路径需要转化 E:/workspace/github/iop-cli/command/init/lib/index.js
+      const child = cp.spawn('node', ['-e', code], {
+        cwd: process.cwd(),
+        stdio: 'inherit'
+      })
+
+      child.on('error', e => {
+        log.error(e)
+        process.exit(1)
+      })
+
+      child.on('exit', e => {
+        log.verbose('执行结束')
+        process.exit(e)
+      })
+
+    } catch (e) {
+      log.error(e.message)
+    }
+  }
 }
 
 module.exports = exec;

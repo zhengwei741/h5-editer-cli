@@ -120,20 +120,43 @@ class Package {
   }
 
   getRootFilePath () {
-    // 获取package.json路径
-    const dir = pkgDir(this.packagePath)
-    if (dir) {
-      log.verbose(dir, 'packagePath')
-      // 读取package.json
-      const pkg = require(path.resolve(dir, 'package.json'))
-      // 寻找main/lib
-      if (pkg && pkg.main) {
-        return path.resolve(dir, pkg.main)
+
+    function _getRootFilePath (packagePath) {
+      // 获取package.json路径
+      const dir = pkgDir(packagePath)
+      if (dir) {
+        log.verbose(dir, 'packagePath')
+        // 读取package.json
+        const pkg = require(path.resolve(dir, 'package.json'))
+        // 寻找main/lib
+        // TODO es6 加载模式
+        if (pkg && pkg.main) {
+          return formatPath(path.resolve(dir, pkg.main))
+        }
       }
+      return null
     }
-    return null
+
+    if (this.storeDir) {
+      return _getRootFilePath(this.getFilePath(this.packageVersion))
+    } else {
+      return _getRootFilePath(this.packagePath)
+    }
+
   }
 
+}
+
+function formatPath (p) {
+  if (p && typeof p === 'string') {
+    const sep = path.sep;
+    if (sep === '/') {
+      return p
+    } else {
+      return p.replace(/\\/g, '/')
+    }
+  }
+  return p;
 }
 
 module.exports = Package

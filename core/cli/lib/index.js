@@ -7,7 +7,7 @@ const pathExists = require('path-exists')
 const { program } = require('commander')
 
 const pkg = require('../package.json')
-const { LOW_NODE_VERSION, DEFAULT_CLI_HOME } = require('./const')
+const { DEFAULT_CLI_HOME } = require('./const')
 
 const log = require('@iop-cli/log')
 const { getLastVersion } = require('@iop-cli/get-npm-info')
@@ -16,7 +16,6 @@ const exec = require('@iop-cli/exec')
 async function core () {
   try {
     checkPkgVersion()
-    checkNodeVersion()
     checkRoot()
     checkUserHome()
     checkEnv()
@@ -36,15 +35,7 @@ async function core () {
 function checkPkgVersion () {
   log.info('当前cli版本', pkg.version)
 }
-/**
- * 检查node版本
- */
-function checkNodeVersion () {
-  const currentVersion = process.version
-  if (!semver.gt(currentVersion, LOW_NODE_VERSION)) {
-    throw new Error(colors.red(`iop-cli 需要安装 v${LOW_NODE_VERSION} 以上版本的Node.js`))
-  }
-}
+
 /**
  * 检测是否时root用户
  * root用户创建文件不能操作

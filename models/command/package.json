@@ -1,9 +1,9 @@
 {
-  "name": "@iop-cli/init",
+  "name": "@iop-cli/command",
   "version": "1.0.0",
   "description": "> TODO: description",
   "author": "1217967340@qq.com <1217967340@qq.com>",
-  "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/core/init#readme",
+  "homepage": "https://github.com/zhengwei741/iop-cli/tree/main/core/command#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "directories": {
@@ -13,9 +13,6 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zhengwei741/iop-cli.git"
@@ -26,7 +23,12 @@
   "bugs": {
     "url": "https://github.com/zhengwei741/iop-cli/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@iop-cli/command": "file:../../models/command"
+    "semver": "^7.3.5",
+    "colors": "^1.4.0",
+    "@iop-cli/log": "file:../../utils/log"
   }
 }
