@@ -1,13 +1,14 @@
 const path = require('path')
 const userHome = require('os').homedir()
+const fs = require('fs')
 // 版本对比
 const semver = require('semver')
 const colors = require('colors')
-const pathExists = require('path-exists')
+const pathExists = require('path-exists').sync
 const { program } = require('commander')
 
 const pkg = require('../package.json')
-const { DEFAULT_CLI_HOME } = require('./const')
+const { DEFAULT_CLI_HOME, DEFAULT_TEMPLATE } = require('./const')
 
 const log = require('@iop-cli/log')
 const { getLastVersion } = require('@iop-cli/get-npm-info')
@@ -19,13 +20,14 @@ async function core () {
     checkRoot()
     checkUserHome()
     checkEnv()
+    checkTemplateConfig()
     await updateGlobalVersion()
 
     registerCommand()
   } catch (e) {
     log.error(e.message)
     if (program.debug) {
-      console.log(e)
+      log.verbose(e)
     }
   }
 }
@@ -57,13 +59,14 @@ function checkUserHome () {
  * 检查环境变量
  */
 function checkEnv () {
-  const dotenv = require('dotenv');
-  const dotenvPath = path.resolve(userHome, '.env');
+  const dotenv = require('dotenv')
+  const dotenvPath = path.resolve(userHome, DEFAULT_CLI_HOME, '.env')
   if (pathExists(dotenvPath)) {
     dotenv.config({
       path: dotenvPath,
-    });
+    })
   }
+
   createDefaultConfig();
 }
 
@@ -72,12 +75,24 @@ function createDefaultConfig () {
     home: userHome,
   };
   if (process.env.CLI_HOME) {
-    cliConfig['cliHome'] = path.join(userHome, process.env.CLI_HOME);
+    cliConfig['cliHome'] = path.join(userHome, process.env.CLI_HOME)
   } else {
-    cliConfig['cliHome'] = path.join(userHome, DEFAULT_CLI_HOME);
+    cliConfig['cliHome'] = path.join(userHome, DEFAULT_CLI_HOME)
   }
-  process.env.CLI_HOME_PATH = cliConfig.cliHome;
+  process.env.CLI_HOME_PATH = cliConfig.cliHome
 }
+
+function checkTemplateConfig () {
+  const configPath = path.resolve(userHome, DEFAULT_CLI_HOME, 'template.json')
+  let json = DEFAULT_TEMPLATE
+  if (pathExists(configPath)) {
+    const config = JSON.parse(fs.readFileSync(configPath))
+    json = DEFAULT_TEMPLATE.concat(config)
+  }
+  process.env['TEMPLATE_JSON'] = JSON.stringify(json)
+}
+
+
 
 /**
  * 提示更新版本

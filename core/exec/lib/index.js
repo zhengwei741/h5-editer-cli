@@ -9,8 +9,8 @@ const log = require('@iop-cli/log')
 const SETTINGS = {
   // 默认init包
   // 可通过后台获取 定制不同的初始化方法
-  init: '@iop-cli/init',
-  // init: 'pkg-dir',
+  // init: '@iop-cli/init',
+  init: 'pkg-dir',
 }
 
 const CACHE_DIR = 'dependencies'
@@ -59,8 +59,6 @@ async function exec () {
 
   const rootPath = pkg.getRootFilePath()
 
-  log.verbose(rootPath, '----rootPath')
-
   if (rootPath) {
     // 加载入口文件
     try {
@@ -100,6 +98,8 @@ async function exec () {
     } catch (e) {
       log.error(e.message)
     }
+  } else {
+    log.verbose(rootPath, '未找到rootPath')
   }
 }
 
