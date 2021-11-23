@@ -3,7 +3,7 @@ const DEFAULT_CLI_HOME = '.iop-cli'
 const DEFAULT_TEMPLATE = [
   {
     value: 'iop-cli-vue2-standard-template',
-    name: 'vue2通用模板'
+    name: 'vue2标准模板'
   },
   {
     value: 'iop-cli-vue-admin-template',

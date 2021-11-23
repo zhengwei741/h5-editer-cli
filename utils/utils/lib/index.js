@@ -1,5 +1,3 @@
-'use strict';
-
 function spinnerStart (msg, text = "loding....") {
   const spinner = require('ora')({ text })
   spinner.info(msg)
@@ -11,6 +9,29 @@ function spinnerStart (msg, text = "loding....") {
   return spinner
 }
 
+function exec (command, args, options) {
+  const win32 = process.platform === 'win32';
+
+  const cmd = win32 ? 'cmd' : command
+  const cmdArgs = win32 ? ['/c'].concat(command, args) : args
+  return require('child_process').spawn(cmd, cmdArgs, options || {})
+}
+
+function execCommand (cmd, args, options = {}) {
+
+  const child = exec(cmd, args, options)
+
+  return new Promise((resolve, reject) => {
+    child.on('error', e => {
+      reject(e)
+    })
+    child.on('exit', e => {
+      resolve(e)
+    })
+  })
+}
+
 module.exports = {
-  spinnerStart
+  spinnerStart,
+  execCommand
 }

@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path')
 const fs = require('fs')
+const fse = require('fs-extra')
 
 const pkgDir = require('pkg-dir').sync
 const npminstall = require('npminstall')
@@ -38,19 +39,19 @@ class Package {
     return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${version}@${this.packageName}`)
   }
 
-  emptyDir (fileUrl) {
-    let _this = this
-    var files = fs.readdirSync(fileUrl) // 读取该文件夹
-    files.forEach(function (file) {
-      var stats = fs.statSync(fileUrl + '/' + file)
-      if (stats.isDirectory()) {
-        _this.emptyDir(fileUrl + '/' + file)
-      } else {
-        fs.unlinkSync(fileUrl + '/' + file)
-      }
-    })
-    fs.rmdirSync(fileUrl)
-  }
+  // emptyDir (fileUrl) {
+  //   let _this = this
+  //   var files = fs.readdirSync(fileUrl) // 读取该文件夹
+  //   files.forEach(function (file) {
+  //     var stats = fs.statSync(fileUrl + '/' + file)
+  //     if (stats.isDirectory()) {
+  //       _this.emptyDir(fileUrl + '/' + file)
+  //     } else {
+  //       fs.unlinkSync(fileUrl + '/' + file)
+  //     }
+  //   })
+  //   fs.rmdirSync(fileUrl)
+  // }
 
   async update () {
     const cachePaths = this.getCachePath()
@@ -66,13 +67,12 @@ class Package {
     cachePaths.forEach(path => {
       if (!lastPaths[path]) {
         // 删除原本缓存文件
-        this.emptyDir(path)
+        fse.emptyDirSync(path)
         needUpdate = true
       }
     })
 
     if (needUpdate) {
-      this.packageVersion = lastVersion
       this._cachePath = lastPaths
       return this.installNPM(lastVersion)
     }
@@ -106,6 +106,7 @@ class Package {
   }
 
   installNPM (version) {
+    let _this = this
     return npminstall({
       root: this.packagePath,
       registry: getDefaultRegistry(),
@@ -116,6 +117,8 @@ class Package {
           version
         },
       ],
+    }).then(() => {
+      _this.packageVersion = version
     })
   }
 

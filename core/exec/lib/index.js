@@ -1,10 +1,10 @@
 'use strict';
 
 const path = require('path')
-const cp = require('child_process')
 
 const Package = require('@iop-cli/package')
 const log = require('@iop-cli/log')
+const { execCommand } = require('@iop-cli/utils')
 
 const SETTINGS = {
   // 默认init包
@@ -80,21 +80,16 @@ async function exec () {
 
       let code = `require('${rootPath}').call(null, ${JSON.stringify(args)})`
       // 这种方式路径需要转化 E:/workspace/github/iop-cli/command/init/lib/index.js
-      const child = cp.spawn('node', ['-e', code], {
+      execCommand('node', ['-e', code], {
         cwd: process.cwd(),
         stdio: 'inherit'
-      })
-
-      child.on('error', e => {
+      }).then(c => {
+        log.verbose('执行结束')
+        process.exit(c)
+      }).catch(e => {
         log.error(e)
         process.exit(1)
       })
-
-      child.on('exit', e => {
-        log.verbose('执行结束')
-        process.exit(e)
-      })
-
     } catch (e) {
       log.error(e.message)
     }

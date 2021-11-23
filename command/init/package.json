@@ -28,9 +28,10 @@
   },
   "dependencies": {
     "@iop-cli/command": "file:../../models/command",
-    "@iop-cli/utils": "file:../../utils/utils",
-    "@iop-cli/package": "file:../../models/package",
     "@iop-cli/log": "file:../../utils/log",
+    "@iop-cli/package": "file:../../models/package",
+    "@iop-cli/utils": "file:../../utils/utils",
+    "ejs": "^3.1.6",
     "inquirer": "^8.2.0",
     "semver": "^7.3.5"
   }
