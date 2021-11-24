@@ -1,5 +1,6 @@
 {
   "packages": [
+    "command/*",
     "core/*",
     "utils/*",
     "models/*"

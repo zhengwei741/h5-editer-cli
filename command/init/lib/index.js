@@ -49,7 +49,7 @@ class InitCommand extends Command {
           message: '请输入项目名称',
           validate (value) {
             var done = this.async()
-            if (/[^\w]/g.test(value)) {
+            if (!value || /[^\w]/g.test(value)) {
               done('请输入合法的项目名称')
               return
             }

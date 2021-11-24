@@ -9,8 +9,8 @@ const { execCommand } = require('@iop-cli/utils')
 const SETTINGS = {
   // 默认init包
   // 可通过后台获取 定制不同的初始化方法
-  // init: '@iop-cli/init',
-  init: 'pkg-dir',
+  init: '@iop-cli/init',
+  // init: 'pkg-dir',
 }
 
 const CACHE_DIR = 'dependencies'
